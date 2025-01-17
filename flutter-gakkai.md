@@ -17,6 +17,23 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
 ---
 
+<!-- header: 自己紹介 -->
+
+## 吉田 航己
+## Yoshida Koki
+
+<br>
+株式会社サイバーエージェント
+<br>
+モバイルアプリエンジニア
+
+### X : [@koki8442](https://x.com/koki8442)
+### GitHub : [lllttt06](https://github.com/lllttt06)
+
+![bg 50% top right](./images/selfy_round.png)
+
+---
+
 ## 目次
 
 #### 1. GraphQL の概要
@@ -316,16 +333,157 @@ ui/
 
 ## スキーマファースト開発
 
+**最初に GraphQL Schema を定義し、Schema 定義に合うようにコード(API など)を実装する手法**
+- クライアントーサーバー間のコミュニケーションコスト削減
+- API 実装完了前でも Schema からデータをモック可能
+- [file-sync-action](https://github.com/wadackel/files-sync-action) でサーバーでマージした Schema を同期
+
+---
+
+## スキーマファースト開発
+
+![](./images/file-sync-action.png)
+
+---
+<!-- header: 3. Flutter × GraphQL の利点 -->
+
+## クライアントキャッシュ
+モバイルアプリにとって個人的に GraphQL を採用する一番のメリット
+
+GraphQL クライアントでは、Query, Mutation などの Operation の結果を**正規化**してキャッシュ。正規化は以下の 3 ステップで行われる。
+
+1. Operation 結果を分割して個別のオブジェクトにする
+2. 分割したオブジェクトに一意の key をつける
+3. それぞれのオブジェクトをフラットに保存する
+
 ---
 
 <!-- header: 3. Flutter × GraphQL の利点 -->
 
 ## クライアントキャッシュ
 
+<style scoped>
+  pre > code {
+    max-height: 500px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+ .columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+</style>
+
+<div class="columns">
+<div>
+
+```graphql
+# リクエスト
+query {
+  comics {
+    id
+    title
+    episodes {
+      id
+      title
+  }
+}
+```
+</div>
+<div>
+
+```yaml
+# レスポンス
+[   
+  Comics: [
+    {
+      id: 1,
+      __typename: “Commics”,
+      title: “WebToon Title”,
+      episodes: [
+        {
+          id: 1,
+          __typename: “Episodes”,
+          title: “Revenge”,
+        },
+        {
+          id: 2,
+          __typename: “Episodes”,
+          title: “Imagination”,
+        },
+      ],
+    },     
+  ]
+]
+```
+</div>
+</div>
+
+---
+
+<!-- header: 3. Flutter × GraphQL の利点 -->
+
+![bg](./images/graphql_normalization.png)
+
+---
+
+<!-- header: 3. Flutter × GraphQL の利点 -->
+
+## クライアントキャッシュ
+
+キャッシュの更新、保存を自動で GraphQL クライアントが行う
+
+<br>
+
+`useQuery` を使用している Widget は別の Query や Mutation でのキャッシュの更新に伴って UI も自動で更新される
+
+
 ---
 <!-- header: 3. Flutter × GraphQL の利点 -->
 
 ## 宣言的 UI との親和性
+データを元に UI を構築する宣言的 UI は、
+GraphQL クライアントのキャッシュ機構との親和性が高い。
+
+ある Operation で正規化されたキャッシュデータが更新されると、
+それを参照しているすべての UI が更新されるため。
+
+
+### REST では同じことは出来ないの？？
+<!-- この GraphQL クライアント技術の利点は REST にも応用可能。 -->
+<!-- 実際に Redux の公式ドキュメントでも [Store データの正規化](https://redux.js.org/usage/structuring-reducers/normalizing-state-shape)について言及されている。 -->
 
 ---
 
+<!-- header: 3. Flutter × GraphQL の利点 -->
+
+## 宣言的 UI との親和性
+- Redux の公式ドキュメント [Store データの正規化](https://redux.js.org/usage/structuring-reducers/normalizing-state-shape)
+→ 正規化を手動で行う必要がある。GraphQL はデータの構造が Schema に **Graph** として表現されているため機械的にこれができる。
+
+- React の [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview) や [SWR](https://swr.vercel.app/ja)
+→ 基本的に URL を key としてキャッシュするため、個々のデータに分割してキャッシュされない。
+→ Flutter にはこれらにインスパイアされた [fQuery](https://pub.dev/packages/fquery) がある。
+
+---
+
+## おわりに
+詳細は[こちら](https://developers.cyberagent.co.jp/blog/archives/48956/)
+[<img src="./images/ogp.png" width=800>](https://developers.cyberagent.co.jp/blog/archives/48956/)
+
+
+---
+
+<!-- header: ''-->
+
+## 参考文献
+
+- [GraphQL](https://graphql.org/)
+- [Caching in Apollo Client](https://www.apollographql.com/docs/react/caching/overview/)
+- [Demystifying Cache Normalization](https://www.apollographql.com/blog/demystifying-cache-normalization)
+- [Normalizing State Shape](https://redux.js.org/usage/structuring-reducers/normalizing-state-shape)
+- [GraphQL Client Architecture Recommendation 社外版](https://engineering.mercari.com/blog/entry/20221215-graphql-client-architecture-recommendation/)
+- [宣言的UIの状態管理とアーキテクチャSwiftUIとGraphQLによる実践/swiftui-graphql](https://speakerdeck.com/sonatard/swiftui-graphql)
+
+---
