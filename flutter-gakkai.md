@@ -485,5 +485,3 @@ GraphQL クライアントのキャッシュ機構との親和性が高い。
 - [Normalizing State Shape](https://redux.js.org/usage/structuring-reducers/normalizing-state-shape)
 - [GraphQL Client Architecture Recommendation 社外版](https://engineering.mercari.com/blog/entry/20221215-graphql-client-architecture-recommendation/)
 - [宣言的UIの状態管理とアーキテクチャSwiftUIとGraphQLによる実践/swiftui-graphql](https://speakerdeck.com/sonatard/swiftui-graphql)
-
----
