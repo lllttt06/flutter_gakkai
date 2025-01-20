@@ -17,8 +17,6 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
 ---
 
-<!-- header: 自己紹介 -->
-
 ## 吉田 航己
 ## Yoshida Koki
 
@@ -37,10 +35,9 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 ## 目次
 
 #### 1. GraphQL の概要
-#### 2. ジャンプTOON の GraphQL 活用
+#### 2. Flutter での GraphQL 活用
 #### 3. Flutter で GraphQL を使う利点
-#### 4. Flutter × GraphQL 開発の工夫
-#### 5. おわりに
+#### 4. おわりに
 
 ---
 
@@ -55,7 +52,7 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
 ---
 
-<!-- header: 2. ジャンプTOON での GraphQL 活用 -->
+<!-- header: 2. Flutter での GraphQL 活用 -->
 
 ### 使用パッケージ
 
@@ -65,7 +62,7 @@ GraphQL 自動生成関連：[graphql_codegen](https://pub.dev/packages/graphql_
 
 ---
 
-<!-- header: 2. ジャンプTOON での GraphQL 活用 -->
+<!-- header: 2. Flutter での GraphQL 活用 -->
 
 <style scoped>
   pre {
@@ -177,7 +174,7 @@ class GraphQLQueryContainer extends HookWidget {
   }
 </style>
 
-<!-- header: 2. ジャンプTOON での GraphQL 活用 -->
+<!-- header: 2. Flutter での GraphQL 活用 -->
 
 ### query の定義と自動生成ファイル
 
@@ -290,7 +287,7 @@ graphql_flutter.QueryHookResult<Query$Setting> useQuery$Setting(
 
 ---
 
-<!-- header: 2. ジャンプTOON での GraphQL 活用 -->
+<!-- header: 2. Flutter での GraphQL 活用 -->
 
 <style scoped>
   pre > code {
