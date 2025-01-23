@@ -35,7 +35,7 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 ## 目次
 
 #### 1. GraphQL の概要
-#### 2. Flutter での GraphQL 活用
+#### 2. Flutter での GraphQL 使用例
 #### 3. Flutter で GraphQL を使う利点
 #### 4. おわりに
 
@@ -52,7 +52,7 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
 ---
 
-<!-- header: 2. Flutter での GraphQL 活用 -->
+<!-- header: 2. Flutter での GraphQL 使用例 -->
 
 ### 使用パッケージ
 
@@ -62,13 +62,14 @@ GraphQL 自動生成関連：[graphql_codegen](https://pub.dev/packages/graphql_
 
 ---
 
-<!-- header: 2. Flutter での GraphQL 活用 -->
-
 <style scoped>
   pre {
     max-height: 450px;
     overflow-y: auto;
     white-space: pre-wrap;
+  }
+  pre > code {
+    font-size: 30px;
   }
  .columns {
     display: grid;
@@ -80,10 +81,6 @@ GraphQL 自動生成関連：[graphql_codegen](https://pub.dev/packages/graphql_
 ### SettingScreen の例
 
 データの取得を Screen 内の `useQuery$Setting` で行う
-
-
-<div class="columns">
-<div>
 
 ```dart
 // setting_screen.dart
@@ -113,57 +110,13 @@ class SettingScreen extends HookConsumerWidget {
   }
 }
 ```
-</div>
-<div>
 
-```dart
-// graphql_query_container.dart
-class GraphQLQueryContainer extends HookWidget {
-  const GraphQLQueryContainer({
-    required this.query,
-    required this.child,
-    this.onLoadingWidget,
-    this.onEmptyWidget,
-    this.onErrorWidget,
-    super.key,
-  });
-
-  final QueryHookResult query;
-  final Widget Function(TParsed data) child;
-  final Widget? onLoadingWidget;
-  final Widget? onEmptyWidget;
-  final Widget Function(GraphQLException error, StackTrace? stackTrace)?
-      onErrorWidget;
-
-  @override
-  Widget build(BuildContext context) {
-    if (result.hasException && onErrorWidget != null) {
-      // エラーが発生した場合
-      return onErrorWidget!(
-        GraphQLException.fromOperationException(result.exception),
-        StackTrace.current,
-      );
-    } else if (result.data == null && result.isNotLoading) {
-      // データがない場合
-      return onEmptyWidget ?? const SizedBox();
-    } else if (result.data == null && result.isLoading) {
-      // ローディング状態
-      return onLoadingWidget ?? const SizedBox();
-    } else {
-      // データが存在する場合
-      return child(result.parsedData as TParsed);
-    }
-  }
-}
-```
-</div>
-</div>
 
 ---
 
 <style scoped>
   pre > code {
-    max-height: 600px;
+    max-height: 800px;
     overflow-y: auto;
     white-space: pre-wrap;
   }
@@ -174,7 +127,6 @@ class GraphQLQueryContainer extends HookWidget {
   }
 </style>
 
-<!-- header: 2. Flutter での GraphQL 活用 -->
 
 ### query の定義と自動生成ファイル
 
@@ -286,36 +238,6 @@ graphql_flutter.QueryHookResult<Query$Setting> useQuery$Setting(
 </div>
 
 ---
-
-<!-- header: 2. Flutter での GraphQL 活用 -->
-
-<style scoped>
-  pre > code {
-    max-height: 400px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-  }
-</style>
-
-### Fragment Colocation
-コンポーネントとそこで使用するデータ郡(fragment)を1:1対応させ、近くに配置 ([参考資料](https://speakerdeck.com/quramy/fragment-composition-of-graphql))
-
-```
-ui/
-├── component/
-│   └── text/
-│       ├── user_name_text_fragment.graphql
-│       ├── user_name_text_fragment.graphql.dart
-│       └── user_name_text.dart
-└──screen/
-    └── root/
-        └── my_page/
-            ├── my_page_query.graphql
-            ├── my_page_query.graphql.dart
-            └── my_page_screen.dart
-```
-
----
 <!-- header: 3. Flutter × GraphQL の利点 -->
 
 ## Flutter × GraphQL の利点
@@ -325,8 +247,6 @@ ui/
 #### 3. 宣言的 UI との親和性
 
 ---
-
-<!-- header: 3. Flutter × GraphQL の利点 -->
 
 ## スキーマファースト開発
 
@@ -342,22 +262,30 @@ ui/
 ![](./images/file-sync-action.png)
 
 ---
-<!-- header: 3. Flutter × GraphQL の利点 -->
 
 ## クライアントキャッシュ
-モバイルアプリにとって個人的に GraphQL を採用する一番のメリット
+モバイルアプリ観点で個人的に GraphQL を採用する一番のメリット
+
+キャッシュの更新、保存を自動で GraphQL クライアントが行い、`useQuery` を使用している Widget は別の Query や Mutation でのキャッシュの更新に伴って UI も自動で更新される
+
+<br>
+
+<div style="text-align: center;">
+  <img src="./images/declarative.png" width="50%" alt="declarative diagram">
+</div>
+
+---
+
+## クライアントキャッシュの仕組み
 
 GraphQL クライアントでは、Query, Mutation などの Operation の結果を**正規化**してキャッシュ。正規化は以下の 3 ステップで行われる。
 
 1. Operation 結果を分割して個別のオブジェクトにする
 2. 分割したオブジェクトに一意の key をつける
 3. それぞれのオブジェクトをフラットに保存する
-
 ---
 
-<!-- header: 3. Flutter × GraphQL の利点 -->
-
-## クライアントキャッシュ
+## クライアントキャッシュの仕組み
 
 <style scoped>
   pre > code {
@@ -419,25 +347,9 @@ query {
 
 ---
 
-<!-- header: 3. Flutter × GraphQL の利点 -->
-
 ![bg](./images/graphql_normalization.png)
 
 ---
-
-<!-- header: 3. Flutter × GraphQL の利点 -->
-
-## クライアントキャッシュ
-
-キャッシュの更新、保存を自動で GraphQL クライアントが行う
-
-<br>
-
-`useQuery` を使用している Widget は別の Query や Mutation でのキャッシュの更新に伴って UI も自動で更新される
-
-
----
-<!-- header: 3. Flutter × GraphQL の利点 -->
 
 ## 宣言的 UI との親和性
 データを元に UI を構築する宣言的 UI は、
