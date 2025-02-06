@@ -63,58 +63,6 @@ GraphQL 自動生成関連：[graphql_codegen](https://pub.dev/packages/graphql_
 ---
 
 <style scoped>
-  pre {
-    max-height: 450px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-  }
-  pre > code {
-    font-size: 30px;
-  }
- .columns {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-</style>
-
-### SettingScreen の例
-
-データの取得を Screen 内の `useQuery$Setting` で行う
-
-```dart
-// setting_screen.dart
-class SettingScreen extends HookConsumerWidget {
-  const SettingScreen({super.key});
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isGuestUser = useIsGuestUser();
-    final query = useQuery$Setting(options);
-    return Scaffold(
-      // ...
-      body: GraphQLQueryContainer(
-        query: query,
-        onLoadingWidget: SkeletonSettingScreen(isGuestUser: isGuestUser),
-        onErrorWidget: (error, stackTrace) => ErrorContainer(
-          error: error,
-          stackTrace: stackTrace,
-          onAction: query.refetch,
-        ),
-        child: (data) {
-          return SingleChildScrollView(
-            // ...
-          );
-        },
-      ),
-    );
-  }
-}
-```
-
-
----
-
-<style scoped>
   pre > code {
     max-height: 800px;
     overflow-y: auto;
@@ -236,6 +184,57 @@ graphql_flutter.QueryHookResult<Query$Setting> useQuery$Setting(
 ```
 </div>
 </div>
+
+---
+
+<style scoped>
+  pre {
+    max-height: 450px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  pre > code {
+    font-size: 30px;
+  }
+ .columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+</style>
+
+### SettingScreen の例
+
+データの取得を Screen 内の `useQuery$Setting` で行う
+
+```dart
+// setting_screen.dart
+class SettingScreen extends HookConsumerWidget {
+  const SettingScreen({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isGuestUser = useIsGuestUser();
+    final query = useQuery$Setting(options);
+    return Scaffold(
+      // ...
+      body: GraphQLQueryContainer(
+        query: query,
+        onLoadingWidget: SkeletonSettingScreen(isGuestUser: isGuestUser),
+        onErrorWidget: (error, stackTrace) => ErrorContainer(
+          error: error,
+          stackTrace: stackTrace,
+          onAction: query.refetch,
+        ),
+        child: (data) {
+          return SingleChildScrollView(
+            // ...
+          );
+        },
+      ),
+    );
+  }
+}
+```
 
 ---
 <!-- header: 3. Flutter × GraphQL の利点 -->
